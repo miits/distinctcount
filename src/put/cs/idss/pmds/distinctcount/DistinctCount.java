@@ -33,14 +33,14 @@ public class DistinctCount {
         }
     }
 
-    public void addLinear(int key) {
+    public void addBloom(int key) {
         if (!bloomFilter.contains(key)) {
             bloomFilter.add(key);
             distinctCount++;
         }
     }
 
-    public void addBloom(int key) {
+    public void addLinear(int key) {
         if (!linearCounter.contains(key)) {
             linearCounter.add(key);
             distinctCount++;
@@ -51,6 +51,12 @@ public class DistinctCount {
 		return distinctCount;
 	}
 
+	double getLinearCount(BloomFilter counter) {
+        double inv = 1/counter.zeros();
+	    double log = Math.log(inv);
+	    return counter.size * log / counter.k;
+    }
+
 	public static void main(String[] args) throws Exception {
 
 
@@ -58,8 +64,8 @@ public class DistinctCount {
 
 		long sTime = System.currentTimeMillis();
 
-		int size = 333000 * 10;
-		int k = 6;
+		int size = 500000;
+		int k = 3;
 		int range = size * 10;
 		String separator = ",";
 
@@ -77,12 +83,13 @@ public class DistinctCount {
 		
 		long runningTime = System.currentTimeMillis() - sTime;
 
-		System.out.println("Distinct count = " + dc.getDistinctCount());
+//		System.out.println("Distinct count = " + dc.getLinearCount(dc.linearCounter));
+        System.out.println("Distinct count = " + dc.getDistinctCount());
 		System.out.println("Running time = " + runningTime);
 
-        //Bloom count: 169099 time: 42345
-        //Linear count: 331658 time: 191700
-        //Hash count: 332123 time: 16389
+        //Linear count: 391400.2950502186 time: 34758
+        //Bloom count: 392228.8753043585 time: 75870
+        //Hash count: 332123 time: 14805
 	}
 	
 }

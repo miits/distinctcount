@@ -37,6 +37,17 @@ public class BloomFilter {
 		return true;
 	}
 
+	public double zeros() {
+		int zeros = 0;
+		for(int i = 0; i < size; i++) {
+			if (!array.get(i)) {
+				zeros++;
+			}
+		}
+		double res = (double)zeros / (double)size;
+		return res;
+	}
+
 	private boolean isPrime(int x) {
 		for(int i = 2; i < x; i++) {
 			if (x % i == 0) return false;
@@ -61,41 +72,43 @@ public class BloomFilter {
 		Random random = new Random(0);
 		
 		BloomFilter bf = new BloomFilter(size, k, range);
+		bf.array.set(0);
+		System.out.println(bf.zeros());
 		
-		HashSet<Integer> set = new HashSet<Integer>(n);
-		
-		while(set.size() < n) {
-			set.add(random.nextInt(range));
-		}
-		
-		for(int item : set) {
-			bf.add(item);
-		}
-		
-		int TP = 0, FP = 0, TN = 0, FN = 0;
-		
-		for(int i = 0; i < range; i++) {
-			int key = i; //random.nextInt(range);
-			Boolean containsBF = bf.contains(key);
-			Boolean containsHS = set.contains(key);
-			
-			//System.out.println(key + " " + containsBF + " " + containsHS);
-			
-			if(containsBF && containsHS) {
-				TP++;
-			} else if(!containsBF && !containsHS) {
-				TN++;
-			} else if(!containsBF && containsHS) {
-				FN++;
-			}  else if(containsBF && !containsHS) {
-				FP++;
-			}   
-		}
-		
-		System.out.println("TP = " + String.format("%6d", TP) + "\tTPR = " + String.format("%1.4f", (double) TP/ (double) n));
-		System.out.println("TN = " + String.format("%6d", TN) + "\tTNR = " + String.format("%1.4f", (double) TN/ (double) (range-n)));
-		System.out.println("FN = " + String.format("%6d", FN) + "\tFNR = " + String.format("%1.4f", (double) FN/ (double) (n)));
-		System.out.println("FP = " + String.format("%6d", FP) + "\tFPR = " + String.format("%1.4f", (double) FP/ (double) (range-n)));
+//		HashSet<Integer> set = new HashSet<Integer>(n);
+//
+//		while(set.size() < n) {
+//			set.add(random.nextInt(range));
+//		}
+//
+//		for(int item : set) {
+//			bf.add(item);
+//		}
+//
+//		int TP = 0, FP = 0, TN = 0, FN = 0;
+//
+//		for(int i = 0; i < range; i++) {
+//			int key = i; //random.nextInt(range);
+//			Boolean containsBF = bf.contains(key);
+//			Boolean containsHS = set.contains(key);
+//
+//			//System.out.println(key + " " + containsBF + " " + containsHS);
+//
+//			if(containsBF && containsHS) {
+//				TP++;
+//			} else if(!containsBF && !containsHS) {
+//				TN++;
+//			} else if(!containsBF && containsHS) {
+//				FN++;
+//			}  else if(containsBF && !containsHS) {
+//				FP++;
+//			}
+//		}
+//
+//		System.out.println("TP = " + String.format("%6d", TP) + "\tTPR = " + String.format("%1.4f", (double) TP/ (double) n));
+//		System.out.println("TN = " + String.format("%6d", TN) + "\tTNR = " + String.format("%1.4f", (double) TN/ (double) (range-n)));
+//		System.out.println("FN = " + String.format("%6d", FN) + "\tFNR = " + String.format("%1.4f", (double) FN/ (double) (n)));
+//		System.out.println("FP = " + String.format("%6d", FP) + "\tFPR = " + String.format("%1.4f", (double) FP/ (double) (range-n)));
 		
 	}
 
